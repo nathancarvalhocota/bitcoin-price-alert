@@ -3,8 +3,7 @@ import asyncio
 import datetime
 from zoneinfo import ZoneInfo
 
-# HORARIOS = ["06:00", "09:00", "12:00", "15:00", "18:00", "21:00"]
-HORARIOS = ["13:15", "13:20", "13:25", "13:30", "18:00", "21:00"]
+HORARIOS = ["06:00", "09:00", "12:00", "15:00", "18:00", "21:00"]
 FUSO_BRASIL = ZoneInfo("America/Sao_Paulo")
 
 async def price_check_loop(target_price):
