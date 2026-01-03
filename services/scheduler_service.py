@@ -5,7 +5,7 @@ import math
 from zoneinfo import ZoneInfo
 
 #HORARIOS = ["06:00", "09:00", "12:00", "15:00", "18:00", "21:00"]
-HORARIOS = ["16:59", "17:05", "17:10", "17:15", "17:25", "17:30"]
+HORARIOS = ["16:59", "17:05", "17:10", "17:15", "17:25", "17:32"]
 FUSO_BRASIL = ZoneInfo("America/Sao_Paulo")
 
 
