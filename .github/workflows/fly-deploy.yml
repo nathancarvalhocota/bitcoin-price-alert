@@ -1,0 +1,78 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  # Job 1: Validar código
+  validate:
+    name: 🔍 Validate Code
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐍 Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: 📦 Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: 🔍 Check Python syntax
+        run: |
+          python -m py_compile main.py
+          python -m py_compile services/*.py
+
+      - name: ✅ Validate fly.toml
+        uses: superfly/flyctl-actions/setup-flyctl@master
+      
+      - name: 🔧 Check fly.toml syntax
+        run: flyctl config validate
+
+  # Job 2: Deploy (só roda se validação passar)
+  deploy:
+    name: 🚀 Deploy to Production
+    needs: validate
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    concurrency: 
+      group: deploy-production
+      cancel-in-progress: false
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐳 Setup Fly.io CLI
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: 🚀 Deploy to Fly.io
+        run: flyctl deploy --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      - name: 🏥 Health check
+        run: |
+          echo "⏳ Aguardando deploy estabilizar..."
+          sleep 30
+          flyctl status
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      - name: ✅ Deployment successful
+        run: |
+          echo "🎉 Deploy realizado com sucesso!"
+          echo "🔗 App: https://bitcoin-price-alert.fly.dev"
+          echo "📊 Logs: flyctl logs"

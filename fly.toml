@@ -1,0 +1,26 @@
+# Identificação do app
+app = "bitcoin-price-alert" 
+primary_region = "gru"
+
+# Configurações de build
+[build]
+  dockerfile = "Dockerfile"
+
+# Variáveis de ambiente públicas
+[env]
+  TZ = "America/Sao_Paulo"
+  PYTHONUNBUFFERED = "1"
+
+# Configuração da VM
+[vm]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 256  
+
+# Processo principal
+[processes]
+  app = "python -u main.py"
+
+# Configuração de deploy
+[deploy]
+  strategy = "immediate"
