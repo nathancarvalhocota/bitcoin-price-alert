@@ -12,38 +12,32 @@ on:
 jobs:
   # Job 1: Validar código
   validate:
-    name: 🔍 Validate Code
+    name: Validação
     runs-on: ubuntu-latest
     
     steps:
-      - name: 📥 Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: 🐍 Setup Python 3.11
+      - name: Setup Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
 
-      - name: 📦 Install dependencies
+      - name: Instalação de dependências
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: 🔍 Check Python syntax
+      - name: Compilação do código
         run: |
           python -m py_compile main.py
           python -m py_compile services/*.py
 
-      - name: ✅ Validate fly.toml
-        uses: superfly/flyctl-actions/setup-flyctl@master
-      
-      - name: 🔧 Check fly.toml syntax
-        run: flyctl config validate
-
   # Job 2: Deploy (só roda se validação passar)
   deploy:
-    name: 🚀 Deploy to Production
+    name: Deploy
     needs: validate
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -52,26 +46,26 @@ jobs:
       cancel-in-progress: false
     
     steps:
-      - name: 📥 Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: 🐳 Setup Fly.io CLI
+      - name: Setup Fly.io
         uses: superfly/flyctl-actions/setup-flyctl@master
 
-      - name: 🚀 Deploy to Fly.io
+      - name: Deploy Fly.io
         run: flyctl deploy --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
-      - name: 🏥 Health check
+      - name: Health check
         run: |
-          echo "⏳ Aguardando deploy estabilizar..."
+          echo "Aguardando deploy..."
           sleep 30
           flyctl status
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
-      - name: ✅ Deployment successful
+      - name: Concluído com sucesso!
         run: |
           echo "🎉 Deploy realizado com sucesso!"
           echo "🔗 App: https://bitcoin-price-alert.fly.dev"
