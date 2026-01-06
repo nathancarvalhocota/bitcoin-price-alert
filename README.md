@@ -1,9 +1,5 @@
 # Bitcoin Price Alert
 
-[![Deploy to Fly.io](https://github.com/SEU_USERNAME/bitcoin-price-alert/actions/workflows/fly-deploy.yml/badge.svg)](https://github.com/SEU_USERNAME/bitcoin-price-alert/actions/workflows/fly-deploy.yml)
-![Python Version](https://img.shields.io/badge/Python-3.11+-blue.svg)
-![License](https://img.shields.io/badge/License-MIT-green.svg)
-
 Bot automatizado desenvolvido em Python que monitora o preço do Bitcoin em tempo real e envia alertas via Telegram. O projeto utiliza Docker para containerização e está deployado no Fly.io com pipeline de CI/CD configurado via GitHub Actions.
 
 ## Sobre o Projeto
