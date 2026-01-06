@@ -40,7 +40,7 @@ Este projeto foi desenvolvido como uma aplicação prática para aprender e apli
 - **Fly.io** - Plataforma cloud para deploy em produção
 - **GitHub Actions** - Pipeline de CI/CD para deploy automático
 
-### Descrição dos Principais Arquivos
+## Descrição dos Principais Arquivos
 
 **main.py**
 Ponto de entrada da aplicação. Responsável por validar o valor alvo e inicializar o loop assíncrono de monitoramento.
