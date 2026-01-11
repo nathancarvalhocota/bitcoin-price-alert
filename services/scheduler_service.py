@@ -1,17 +1,17 @@
-from services.price_tracker_service import track_bitcoin_price
+from services.price_tracker_service import track_price
 import asyncio
 import datetime
 import math
 from zoneinfo import ZoneInfo
 
-HORARIOS = ["06:00", "09:00", "12:00", "15:00", "18:00", "21:00"]
+HORARIOS = ["06:00", "09:00", "12:00", "15:39", "18:00", "21:00"]
 #HORARIOS = ["16:59", "17:05", "17:10", "17:15", "17:25", "17:32"]
 
 FUSO_BRASIL = ZoneInfo("America/Sao_Paulo")
 
 
 async def price_check_loop():
-    print("[SCHEDULER] Serviço iniciado...")
+    print("[SCHEDULER] Serviço iniciado.")
 
     while True:
         proximo = proximo_horario()
@@ -26,12 +26,13 @@ async def price_check_loop():
         await asyncio.sleep(segundos_espera)
 
         try:
-            print("[SCHEDULER] Iniciando verificação do preço do Bitcoin...")
-            await track_bitcoin_price(proximo.strftime("%d/%m/%Y %H:%M"))
+            print("[SCHEDULER] Iniciando verificação de preço...")
+            await track_price(proximo.strftime("%d/%m/%Y %H:%M"))
             print("[SCHEDULER] Verificação finalizada com sucesso.\n")
         except Exception as e:
             print(f"[SCHEDULER][ERRO] Falha durante a verificação: {e}\n")
-
+        except asyncio.CancelledError:
+            print("[SCHEDULER] Loop encerrado com segurança")
 
 
 def proximo_horario() -> datetime.datetime:
